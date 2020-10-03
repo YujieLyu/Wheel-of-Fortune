@@ -17,7 +17,7 @@ class AddElement extends Component {
             name: this.state.name
         }
         this.props.addCan(newCandidate);
-        console.log(this.props.allList);
+        // console.log(this.props.allList);
         this.addElement(newCandidate);
         if (this.state.name !== '') {
             axios.post('https://us-central1-wheel-of-fortune-b4c69.cloudfunctions.net/api/new', newCandidate)

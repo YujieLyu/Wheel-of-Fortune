@@ -48,13 +48,17 @@ const { addNewSprintplanCan } = require('./APIs/candidates');
 
 app.post('/newSprintplanCan', addNewSprintplanCan);
 
-const { addStandupHost } = require('./APIs/candidates');
-
-app.post('/add-standup-host', addStandupHost);
-
 const {deleteStandupCan}=require('./APIs/candidates');
 
-app.delete('/sirius-standup/:id',deleteStandupCan)
+app.delete('/sirius-standup/:id',deleteStandupCan);
+
+const {deleteRretroCan}=require('./APIs/candidates');
+
+app.delete('/sirius-retro/:id',deleteRretroCan);
+
+const {deleteSprintplanCan}=require('./APIs/candidates');
+
+app.delete('/sirius-sprintplan/:id',deleteSprintplanCan)
 
 const {deleteCan}=require('./APIs/candidates');
 

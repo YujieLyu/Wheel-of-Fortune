@@ -17,7 +17,7 @@ class App extends Component {
       added: [],
       standupList: [],
       retroList: [],
-      spriintPlanList: [],
+      sprintPlanList: [],
       colorsList: []
     }
 
@@ -29,7 +29,7 @@ class App extends Component {
       this.getColorList();
       this.getStandupList();
       this.getRetroList();
-      this.getSpriintPlanList();
+      this.getSprintPlanList();
     }
   }
 
@@ -69,11 +69,11 @@ class App extends Component {
       })
   }
 
-  getSpriintPlanList() {
+  getSprintPlanList() {
     axios.get('https://us-central1-wheel-of-fortune-b4c69.cloudfunctions.net/api/sprint-plan')
       .then(res => {
-        const spriintPlanList = res.data;
-        this.setState({ spriintPlanList })
+        const sprintPlanList = res.data;
+        this.setState({ sprintPlanList })
       })
   }
 
@@ -82,7 +82,7 @@ class App extends Component {
     this.getColorList();
     this.getStandupList();
     this.getRetroList();
-    this.getSpriintPlanList();
+    this.getSprintPlanList();
   }
 
   determinePieList = (mode) => {
@@ -104,7 +104,7 @@ class App extends Component {
         break;
       case 'sprint-planning':
         this.setState({
-          pieList: [...this.state.spriintPlanList],
+          pieList: [...this.state.sprintPlanList],
           removed: [],
           added: []
         });
@@ -143,6 +143,7 @@ class App extends Component {
 
 
   deleteCan = (eleInAll, eleInPie) => {
+    console.log('here is the ele in pie', eleInPie);
     if (eleInAll) {
       const updatedAllList = this.state.allList.filter(e => e.id !== eleInAll.id);
       this.setState({ allList: updatedAllList })
@@ -151,8 +152,44 @@ class App extends Component {
     if (eleInPie) {
       const updatedPieList = this.state.pieList.filter(e => e.id !== eleInPie.id);
       this.setState({ pieList: updatedPieList })
-      axios.delete(`https://us-central1-wheel-of-fortune-b4c69.cloudfunctions.net/api/sirius-standup/${eleInPie.id}`)
+      //TODO: find the id in different list by name
+      let standupID, retroID, sprintplanID;
+
+      switch (eleInPie.mode) {
+        case "standup":
+          standupID = eleInPie.id;
+          retroID = this.state.retroList.filter(e => e.name === eleInPie.name).id;
+          sprintplanID = this.state.sprintPlanList.filter(e => e.name === eleInPie.name).id;
+          break;
+        case "retro":
+          standupID = this.state.standupList.filter(e => e.name === eleInPie.name).id;
+          retroID = eleInPie.id;
+          sprintplanID = this.state.sprintPlanList.filter(e => e.name === eleInPie.name).id;
+          break;
+        case "plan":
+          standupID = this.state.standupList.filter(e => e.name === eleInPie.name).id;
+          retroID = this.state.retroList.filter(e => e.name === eleInPie.name).id;
+          sprintplanID = eleInPie.id;
+          break;
+        default:
+          console.log("didn't find the mode to remove this element from display list")
+      }
+      console.log(standupID, retroID, sprintplanID)
+      axios.delete(`https://us-central1-wheel-of-fortune-b4c69.cloudfunctions.net/api/sirius-standup/${standupID}`);
+      axios.delete(`https://us-central1-wheel-of-fortune-b4c69.cloudfunctions.net/api/sirius-retro/${retroID}`);
+      axios.delete(`https://us-central1-wheel-of-fortune-b4c69.cloudfunctions.net/api/sirius-sprintplan/${sprintplanID}`);
+
     }
+    // if(eleRetro){
+    //   const updatedPieList = this.state.pieList.filter(e => e.id !== eleInPie.id);
+    //   this.setState({ pieList: updatedPieList })
+    //   axios.delete(`https://us-central1-wheel-of-fortune-b4c69.cloudfunctions.net/api/sirius-retro/${eleInPie.id}`)
+    // }
+    // if(eleSprintplan){
+    //   const updatedPieList = this.state.pieList.filter(e => e.id !== eleInPie.id);
+    //   this.setState({ pieList: updatedPieList })
+    //   axios.delete(`https://us-central1-wheel-of-fortune-b4c69.cloudfunctions.net/api/sirius-sprintplan/${eleInPie.id}`)
+    // }
   }
 
   addCan = (newCan) => {

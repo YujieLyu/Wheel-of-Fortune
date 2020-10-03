@@ -12,7 +12,9 @@ const CandidateList = ({ allList, pieList, handleChange, handleClick }) => {
                     </input>
                     <label htmlFor={eleInAll.id}>{eleInAll.name}</label>
                 </div>
-                <div className="delete" onClick={() => handleClick(eleInAll, pieList.find(eleInPie => eleInPie.name === eleInAll.name))}>x</div>
+                <div className="delete"
+                    onClick={() => handleClick(eleInAll,
+                        pieList.find(eleInPie => eleInPie.name === eleInAll.name))}>x</div>
             </div>
         )) : (<div>
             Loading...

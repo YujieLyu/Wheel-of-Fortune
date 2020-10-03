@@ -38,40 +38,9 @@ class Pie extends Component {
         let dist = 360 - (deg % 360);
         let host = Math.floor(dist * this.props.pieList.length / 360);
         let hostName = this.props.pieList[host].name;
-        const newHost = {
-            name: hostName
-        }
-       console.log(this.props.mode)
-        switch (this.props.mode.toLowerCase()) {
-            case "standup":
-                axios.post('https://us-central1-wheel-of-fortune-b4c69.cloudfunctions.net/api/add-standup-host', newHost)
-                    .then(res => {
-                        console.log(res);
-                        console.log(res.data)
-                    });
-                setTimeout(() => this.props.deleted.forEach(e =>
-                    axios.delete(`https://us-central1-wheel-of-fortune-b4c69.cloudfunctions.net/api/sirius-standup/${e.id}`)
-                ), 6000)
-
-                break;
-            case "retro":
-                axios.post('https://us-central1-wheel-of-fortune-b4c69.cloudfunctions.net/api/add-retro-host', newHost)
-                    .then(res => {
-                        console.log(res);
-                        console.log(res.data)
-                    });
-                break;
-            case "plan":
-                axios.post('https://us-central1-wheel-of-fortune-b4c69.cloudfunctions.net/api/add-plan-host', newHost)
-                    .then(res => {
-                        console.log(res);
-                        console.log(res.data)
-                    });
-                break;
-            default:
-                console.log('failed to catch mode after alert host')
-        }
-
+        
+        console.log(this.props.mode)
+        
         alert(`Congrats, ${hostName} ! You will run the next stand-up`)
     }
 
@@ -84,10 +53,35 @@ class Pie extends Component {
         })
         setTimeout(() => this.alertHost(deg), 5500);
 
+        switch (this.props.mode.toLowerCase()) {
+            case "standup":
+                this.props.added.forEach(e =>
+                    axios.post('https://us-central1-wheel-of-fortune-b4c69.cloudfunctions.net/api/newStandupCan', e)
+                );
+                setTimeout(() => this.props.deleted.forEach(e =>
+                    axios.delete(`https://us-central1-wheel-of-fortune-b4c69.cloudfunctions.net/api/sirius-standup/${e.id}`)
+                ), 10000)
+                break;
+            case "retro":
+                this.props.added.forEach(e =>
+                    axios.post('https://us-central1-wheel-of-fortune-b4c69.cloudfunctions.net/api/newRetroCan', e)
+                );
+                setTimeout(() => this.props.deleted.forEach(e =>
+                    axios.delete(`https://us-central1-wheel-of-fortune-b4c69.cloudfunctions.net/api/sirius-retro/${e.id}`)
+                ), 10000)
+                break;
+            case "sprint-planning":
+                this.props.added.forEach(e =>
+                    axios.post('https://us-central1-wheel-of-fortune-b4c69.cloudfunctions.net/api/newSprintplanCan', e)
+                );
+                setTimeout(() => this.props.deleted.forEach(e =>
+                    axios.delete(`https://us-central1-wheel-of-fortune-b4c69.cloudfunctions.net/api/sirius-sprintplan/${e.id}`)
+                ), 10000)
+                break;
+            default:
+                console.log("can't find a mode for adding new candidate")
+        }
 
-        this.props.added.forEach(e =>
-            axios.post('https://us-central1-wheel-of-fortune-b4c69.cloudfunctions.net/api/newStandupCan', e)
-        )
 
 
         // switch (pieList[0].mode) {

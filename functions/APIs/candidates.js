@@ -116,14 +116,16 @@ exports.addNewSprintplanCan = (request, response) => {
 
 }
 
-exports.addStandupHost = (request, response) => {
-
-    addMethod(request, response, 'sirius-standup-hosts', 'standup-host');
-
-}
-
 exports.deleteStandupCan = (request, response) => {
     deleteMethod(request, response, 'sirius-standup')
+}
+
+exports.deleteRretroCan = (request, response) => {
+    deleteMethod(request, response, 'sirius-retro')
+}
+
+exports.deleteSprintplanCan = (request, response) => {
+    deleteMethod(request, response, 'sirius-sprintplan')
 }
 
 exports.deleteCan = (request, response) => {
